@@ -8,6 +8,7 @@ from itertools import zip_longest
 
 url = 'https://www.citilink.ru/catalog/noutbuki/'
 i = 0
+n = 0
 
 id_lst = []
 titles_lst = []
@@ -15,9 +16,8 @@ prices_lst = []
 promo_prices_lst = []
 links_lst = []
 
-
-
 while i < 20:
+
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'lxml')
     url = soup.find('a', class_='js--PaginationWidget__page PaginationWidget__arrow js--PaginationWidget__arrow PaginationWidget__arrow_right')
@@ -29,7 +29,7 @@ while i < 20:
     for name in names:
         titles_lst.append(name.text)
     for p in prices:
-            prices_lst.append(p.text)
+        prices_lst.append(p.text)
 
     new_prices_lst = prices_lst[::2]
     for pr in promo_prices:
@@ -46,12 +46,19 @@ while i < 20:
                 product_id = link[-8:-1]
                 id_lst.append(product_id)
                 links_lst.append(link)
+    n += 1
 
-    i+=1
+    i += 1
 
+print(len(id_lst))
+print(len(titles_lst))
+print(len(new_prices_lst))
+print(len(new_prices_lst))
+print(len(links_lst))
 
 d = [id_lst, titles_lst, new_prices_lst, new_promo_prices_lst, links_lst]
 export_data = zip_longest(*d, fillvalue = '')
+
 with open('notуbooks.csv', 'w', encoding='utf8', newline='') as myfile:
       wr = csv.writer(myfile)
       wr.writerow(("id", "title", "price", "promo_price", "url"))
